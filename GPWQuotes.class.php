@@ -1,6 +1,6 @@
 <?php
 
-class QuotesGPW
+class GPWQuotes
 {
     private $default_provider = 'stooq';
 
@@ -17,9 +17,18 @@ class QuotesGPW
 
     private function factory($provider)
     {
-        $path = 'providers/'.$provider.'.class.php';
-        //@todo sprawdzic czy istnieje i zabezpieczyc
+        $path = __DIR__ . "/providers/$provider.class.php";
+        if (!is_file($path))
+        {
+           Throw new Exception("Bad provider ($provider)");
+        }
+
         require_once $path;
+        if (!class_exists($provider))
+        {
+           Throw new Exception("Bad provider ($provider)");
+        }
+
         return new $provider;
     }
 
